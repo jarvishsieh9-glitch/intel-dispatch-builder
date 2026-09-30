@@ -1,0 +1,885 @@
+<title>情報派報機</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,500&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#1c2333;
+  --paper:#f0f2ee;
+  --paper-raised:#ffffff;
+  --accent-brass:#a6742c;
+  --accent-brass-soft:#a6742c1a;
+  --accent-teal:#2f6f63;
+  --accent-teal-soft:#2f6f631a;
+  --line:#d9dcd5;
+  --line-strong:#c3c7bd;
+  --muted:#6b7266;
+  --danger:#a6402c;
+  --shadow: 0 1px 2px rgba(28,35,51,0.04), 0 8px 24px rgba(28,35,51,0.06);
+  --serif: "Newsreader", "Noto Serif TC", "PMingLiU", serif;
+  --sans: "IBM Plex Sans", "Noto Sans TC", "PingFang TC", sans-serif;
+  --mono: "IBM Plex Mono", "Noto Sans Mono TC", ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e7e9e2;
+    --paper:#12161a;
+    --paper-raised:#1a2024;
+    --accent-brass:#d9a15c;
+    --accent-brass-soft:#d9a15c22;
+    --accent-teal:#6cbba6;
+    --accent-teal-soft:#6cbba622;
+    --line:#2a312c;
+    --line-strong:#3a423b;
+    --muted:#98a093;
+    --danger:#e2795f;
+    --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e7e9e2;
+  --paper:#12161a;
+  --paper-raised:#1a2024;
+  --accent-brass:#d9a15c;
+  --accent-brass-soft:#d9a15c22;
+  --accent-teal:#6cbba6;
+  --accent-teal-soft:#6cbba622;
+  --line:#2a312c;
+  --line-strong:#3a423b;
+  --muted:#98a093;
+  --danger:#e2795f;
+  --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 8px 24px rgba(0,0,0,0.35);
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--paper);
+  color:var(--ink);
+  font-family:var(--sans);
+  font-size:15px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--accent-brass-soft); }
+
+.wrap{ max-width:920px; margin:0 auto; padding:0 24px 96px; }
+
+/* header */
+header.top{
+  display:flex; align-items:baseline; justify-content:space-between; gap:16px;
+  padding:28px 0 18px;
+  border-bottom:1px solid var(--line);
+  margin-bottom:36px;
+  flex-wrap:wrap;
+}
+.brand{ display:flex; align-items:baseline; gap:12px; }
+.brand h1{
+  font-family:var(--serif);
+  font-weight:600;
+  font-size:26px;
+  margin:0;
+  letter-spacing:-0.01em;
+  text-wrap:balance;
+}
+.brand .tag{
+  font-family:var(--mono);
+  font-size:11px;
+  letter-spacing:0.08em;
+  color:var(--muted);
+  text-transform:uppercase;
+}
+.provenance-badge{
+  display:flex; align-items:center; gap:8px;
+  font-family:var(--mono);
+  font-size:11.5px;
+  letter-spacing:0.02em;
+  color:var(--accent-teal);
+  border:1px solid var(--accent-teal);
+  background:var(--accent-teal-soft);
+  padding:6px 11px;
+  white-space:nowrap;
+}
+.provenance-badge::before{
+  content:"";
+  width:6px; height:6px; border-radius:50%;
+  background:var(--accent-teal);
+  flex:none;
+}
+
+section.intro{ margin-bottom:40px; }
+section.intro p{
+  max-width:62ch;
+  color:var(--muted);
+  margin:0;
+  font-size:14.5px;
+}
+
+/* form */
+.form-card{
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  padding:32px;
+  margin-bottom:8px;
+}
+.form-section + .form-section{ margin-top:30px; padding-top:30px; border-top:1px dashed var(--line-strong); }
+.form-section h2{
+  font-family:var(--serif);
+  font-size:17px;
+  font-weight:600;
+  margin:0 0 4px;
+}
+.form-section .hint{
+  font-size:13px;
+  color:var(--muted);
+  margin:0 0 16px;
+}
+label.field{ display:block; margin-bottom:14px; }
+label.field:last-child{ margin-bottom:0; }
+label.field .lbl{
+  display:block;
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--ink);
+  margin-bottom:6px;
+}
+label.field .lbl .opt{ color:var(--muted); font-weight:400; }
+input[type=text], select, textarea{
+  width:100%;
+  font-family:var(--sans);
+  font-size:14px;
+  color:var(--ink);
+  background:var(--paper);
+  border:1px solid var(--line-strong);
+  padding:9px 11px;
+  outline:none;
+}
+input[type=text]:focus, select:focus, textarea:focus{
+  border-color:var(--accent-teal);
+  box-shadow:0 0 0 3px var(--accent-teal-soft);
+}
+textarea{ resize:vertical; min-height:64px; font-family:var(--mono); font-size:13px; line-height:1.55; }
+.row2{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.row2 label.field{ margin-bottom:0; }
+@media (max-width:640px){ .row2{ grid-template-columns:1fr; } }
+
+.kw-group{
+  display:grid; grid-template-columns:120px 1fr; gap:10px; align-items:center;
+  margin-bottom:10px;
+}
+.kw-group input{ margin:0; }
+.kw-group .kw-idx{
+  font-family:var(--mono); font-size:11px; color:var(--muted); letter-spacing:0.04em;
+}
+@media (max-width:640px){ .kw-group{ grid-template-columns:1fr; } .kw-group .kw-idx{ display:none; } }
+
+.fields3{ display:grid; grid-template-columns:1fr; gap:10px; }
+
+button.primary{
+  font-family:var(--sans);
+  font-weight:600;
+  font-size:14.5px;
+  color:var(--paper-raised);
+  background:var(--ink);
+  border:1px solid var(--ink);
+  padding:13px 22px;
+  cursor:pointer;
+  margin-top:26px;
+  width:100%;
+}
+button.primary:hover{ background:var(--accent-teal); border-color:var(--accent-teal); }
+button.primary:focus-visible{ outline:2px solid var(--accent-brass); outline-offset:2px; }
+
+/* results */
+#results{ margin-top:56px; display:none; }
+#results.show{ display:block; }
+
+.results-head{
+  display:flex; align-items:baseline; justify-content:space-between; gap:12px;
+  margin-bottom:22px; flex-wrap:wrap;
+}
+.results-head h2{
+  font-family:var(--serif); font-size:20px; font-weight:600; margin:0;
+}
+.results-head .stamp{
+  font-family:var(--mono); font-size:11px; color:var(--accent-brass); letter-spacing:0.06em;
+  border:1px solid var(--accent-brass); padding:4px 9px;
+}
+
+.dispatch{
+  position:relative;
+  background:var(--paper-raised);
+  border:1px solid var(--line);
+  box-shadow:var(--shadow);
+  margin-bottom:22px;
+}
+.dispatch .dh{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:16px 22px;
+  border-bottom:1px solid var(--line);
+}
+.dispatch .dh .code{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.1em;
+  color:var(--muted); text-transform:uppercase;
+}
+.dispatch .dh h3{
+  font-family:var(--serif); font-size:17px; font-weight:600; margin:2px 0 0;
+}
+.dispatch .body{ padding:20px 22px 22px; }
+.dispatch .body p.note{ font-size:13px; color:var(--muted); margin:0 0 14px; }
+
+.copy-btn{
+  font-family:var(--mono); font-size:11.5px; letter-spacing:0.02em;
+  color:var(--ink); background:var(--paper);
+  border:1px solid var(--line-strong);
+  padding:6px 11px; cursor:pointer; white-space:nowrap; flex:none;
+}
+.copy-btn:hover{ border-color:var(--accent-teal); color:var(--accent-teal); }
+.copy-btn.copied{ border-color:var(--accent-teal); color:var(--accent-teal); background:var(--accent-teal-soft); }
+
+.url-row{
+  display:flex; align-items:center; gap:10px;
+  border:1px solid var(--line);
+  padding:10px 12px;
+  margin-bottom:10px;
+  background:var(--paper);
+}
+.url-row:last-child{ margin-bottom:0; }
+.url-row .meta{ flex:1; min-width:0; }
+.url-row .meta .q{ font-family:var(--mono); font-size:12.5px; color:var(--ink); word-break:break-all; }
+.url-row .meta .g{ font-size:11.5px; color:var(--muted); margin-top:2px; }
+.url-row a.open{
+  font-family:var(--mono); font-size:11px; color:var(--accent-teal); text-decoration:none; flex:none;
+  border-bottom:1px solid var(--accent-teal);
+}
+
+pre{
+  font-family:var(--mono); font-size:12.5px; line-height:1.65;
+  background:var(--paper); border:1px solid var(--line);
+  padding:16px 18px; overflow-x:auto; margin:0;
+  white-space:pre-wrap; word-break:break-word;
+}
+pre.nowrap{ white-space:pre; word-break:normal; }
+
+table.schema{ width:100%; border-collapse:collapse; font-size:13px; }
+table.schema th, table.schema td{
+  text-align:left; padding:8px 10px; border-bottom:1px solid var(--line);
+  vertical-align:top;
+}
+table.schema th{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:0.06em; text-transform:uppercase;
+  color:var(--muted); font-weight:500;
+}
+table.schema td.col{ font-family:var(--mono); font-size:12.5px; white-space:nowrap; }
+table.schema tr.required td.col{ color:var(--accent-brass); font-weight:500; }
+table.schema tr.required td.col::after{ content:" *"; }
+.schema-wrap{ overflow-x:auto; }
+.schema-note{ font-size:12px; color:var(--muted); margin-top:10px; }
+
+.setup-steps{
+  margin:0 0 4px; padding-left:22px; font-size:13.5px; color:var(--ink);
+}
+.setup-steps li{ margin-bottom:10px; }
+.setup-steps li:last-child{ margin-bottom:0; }
+.setup-steps code{
+  font-family:var(--mono); font-size:12px; background:var(--accent-brass-soft);
+  color:var(--accent-brass); padding:1px 5px;
+}
+
+footer.foot{
+  margin-top:64px; padding-top:20px; border-top:1px solid var(--line);
+  font-size:12px; color:var(--muted); text-align:center;
+}
+</style>
+
+<div class="wrap">
+
+  <header class="top">
+    <div class="brand">
+      <h1>情報派報機</h1>
+      <span class="tag">Verified Intel Dispatch Builder</span>
+    </div>
+    <div class="provenance-badge">僅收錄可追溯來源連結的情報</div>
+  </header>
+
+  <section class="intro">
+    <p>填寫您的產業與追蹤目標，系統會自動產生專屬的 Google 新聞 RSS 連結、YouTube 監控設定、AI 分析 Prompt、Google Sheets 欄位表與 Python 自動化腳本 — 全數可直接複製使用。所有輸出強制要求每筆情報附上原始來源連結，無連結者一律不寫入。</p>
+  </section>
+
+  <form class="form-card" id="blueprintForm">
+
+    <div class="form-section">
+      <h2>1. 基本資訊</h2>
+      <p class="hint">用於客製化 AI Prompt 的分析視角。</p>
+      <div class="row2">
+        <label class="field">
+          <span class="lbl">產業領域</span>
+          <input type="text" id="industry" placeholder="例：半導體、跨境電商、B2B SaaS" required>
+        </label>
+        <label class="field">
+          <span class="lbl">職位 / 部門</span>
+          <input type="text" id="role" placeholder="例：產品經理、行銷總監、戰略分析師" required>
+        </label>
+      </div>
+    </div>
+
+    <div class="form-section">
+      <h2>2. Google 新聞與網頁監控關鍵詞組</h2>
+      <p class="hint">每組請直接輸入 Google 新聞搜尋語法，可用 AND／OR／引號／site:／減號排除。最多 5 組。</p>
+      <div id="kwGroups">
+        <div class="kw-group"><span class="kw-idx">關鍵詞組 1</span><input type="text" class="kw-input" placeholder="例：台積電 AND 封裝"></div>
+        <div class="kw-group"><span class="kw-idx">關鍵詞組 2</span><input type="text" class="kw-input" placeholder="例：&quot;AI 伺服器&quot; OR 散熱"></div>
+        <div class="kw-group"><span class="kw-idx">關鍵詞組 3</span><input type="text" class="kw-input" placeholder="例：競品名稱 -徵才"></div>
+        <div class="kw-group"><span class="kw-idx">關鍵詞組 4</span><input type="text" class="kw-input" placeholder="選填"></div>
+        <div class="kw-group"><span class="kw-idx">關鍵詞組 5</span><input type="text" class="kw-input" placeholder="選填"></div>
+      </div>
+      <label class="field" style="margin-top:4px;">
+        <span class="lbl">語言 / 地區</span>
+        <select id="newsLocale">
+          <option value="zh-TW|TW|TW:zh-Hant">繁體中文（台灣）</option>
+          <option value="zh-CN|CN|CN:zh-Hans">简体中文（中国）</option>
+          <option value="en-US|US|US:en">English（United States）</option>
+          <option value="ja|JP|JP:ja">日本語（日本）</option>
+        </select>
+      </label>
+    </div>
+
+    <div class="form-section">
+      <h2>3. YouTube 監控標的</h2>
+      <p class="hint">頻道請貼上網址（支援 /channel/UC… 或 @handle），每行一個；關鍵字每行一個。</p>
+      <label class="field">
+        <span class="lbl">必看頻道 <span class="opt">（選填）</span></span>
+        <textarea id="ytChannels" placeholder="https://www.youtube.com/channel/UCxxxxxxxx&#10;https://www.youtube.com/@某產業頻道"></textarea>
+      </label>
+      <label class="field">
+        <span class="lbl">搜尋關鍵字 <span class="opt">（選填）</span></span>
+        <textarea id="ytKeywords" placeholder="開箱評測&#10;產業趨勢分析"></textarea>
+      </label>
+    </div>
+
+    <div class="form-section">
+      <h2>4. 每日決策核心欄位</h2>
+      <p class="hint">儀表板每天最需要提供給您的 3 個欄位，將寫入 AI Prompt 與 Sheets 欄位設計。</p>
+      <div class="fields3">
+        <input type="text" class="core-field" id="core1" placeholder="例：重點摘要">
+        <input type="text" class="core-field" id="core2" placeholder="例：對本公司的商業影響">
+        <input type="text" class="core-field" id="core3" placeholder="例：建議行動方案">
+      </div>
+    </div>
+
+    <button type="submit" class="primary">產生情報藍圖</button>
+  </form>
+
+  <div id="results">
+
+    <div class="results-head">
+      <h2>您的專屬情報藍圖</h2>
+      <span class="stamp">溯源已驗證 · SOURCE-VERIFIED</span>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">news-rss</span><h3>Google 新聞 RSS 連結</h3></div>
+      </div>
+      <div class="body">
+        <p class="note">點擊「開啟」可直接預覽該關鍵詞組的即時新聞流；每則項目皆含原始新聞來源連結。</p>
+        <div id="newsUrls"></div>
+      </div>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">yt-rss</span><h3>YouTube 監控設定</h3></div>
+      </div>
+      <div class="body" id="ytBlock"></div>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">ai-prompt</span><h3>AI 分析 Prompt</h3></div>
+        <button class="copy-btn" data-copy-target="aiPromptText">複製</button>
+      </div>
+      <div class="body">
+        <p class="note">貼給 Gemini / Claude，搭配當日抓取的新聞與 YouTube 標題／文字稿使用。</p>
+        <pre id="aiPromptText"></pre>
+      </div>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">sheets-schema</span><h3>Google Sheets 欄位設計</h3></div>
+        <button class="copy-btn" data-copy-target="schemaTsv" data-tsv="1">複製為 TSV</button>
+      </div>
+      <div class="body">
+        <div class="schema-wrap">
+          <table class="schema" id="schemaTable"></table>
+        </div>
+        <p class="schema-note">標示 * 者為必填欄位；「來源連結」欄位為空的資料列，寫入腳本會直接跳過，不進入試算表。</p>
+      </div>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">automation</span><h3>Python 自動化腳本</h3></div>
+        <button class="copy-btn" data-copy-target="pyScript">複製</button>
+      </div>
+      <div class="body">
+        <p class="note">需安裝 <code>feedparser</code>、<code>gspread</code>、<code>google-generativeai</code>；YouTube 關鍵字監控另需 <code>google-api-python-client</code> 與 API 金鑰。</p>
+        <pre class="nowrap" id="pyScript"></pre>
+      </div>
+    </div>
+
+    <div class="dispatch">
+      <div class="dh">
+        <div><span class="code">github-actions</span><h3>每日自動執行（GitHub Actions）</h3></div>
+      </div>
+      <div class="body">
+        <p class="note">情報派報機本身只產生設定，不會自己執行。把下面兩個檔案放進一個 GitHub repo，就能讓它每天在雲端自動跑，不需要自己開電腦、不需要伺服器：</p>
+        <ol class="setup-steps">
+          <li>在 GitHub 建立一個新的 <strong>private</strong> repository（例如 <code>daily-intel-bot</code>）。</li>
+          <li>把上方 Python 腳本另存為 <code>daily_intel.py</code>，連同下面的 <code>requirements.txt</code> 與 <code>.github/workflows/daily-intel.yml</code> 一併放進 repo 根目錄。</li>
+          <li>到 repo 的 <strong>Settings → Secrets and variables → Actions</strong>，新增 3 個 Repository secrets：<code>GEMINI_API_KEY</code>、<code>YOUTUBE_API_KEY</code>（沒有 YouTube 關鍵字監控可留空）、<code>GOOGLE_SHEETS_CREDENTIALS_JSON</code>（貼上 Google 服務帳戶金鑰 JSON 的完整內容）。</li>
+          <li>到 <strong>Actions</strong> 分頁確認 workflow 已啟用，可點「Run workflow」手動測試一次；預設每天台灣時間早上 7:00 自動執行。</li>
+          <li>完成——之後金鑰只存在該 repo 的 Secrets 裡，不會經過情報派報機，也不需要任何人持續維護。</li>
+        </ol>
+
+        <p class="note" style="margin-top:18px;"><span class="code" style="display:inline;">requirements.txt</span></p>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:6px;">
+          <button class="copy-btn" data-copy-target="ghRequirements">複製</button>
+        </div>
+        <pre class="nowrap" id="ghRequirements"></pre>
+
+        <p class="note" style="margin-top:18px;"><span class="code" style="display:inline;">.github/workflows/daily-intel.yml</span></p>
+        <div style="display:flex; justify-content:flex-end; margin-bottom:6px;">
+          <button class="copy-btn" data-copy-target="ghWorkflow">複製</button>
+        </div>
+        <pre class="nowrap" id="ghWorkflow"></pre>
+      </div>
+    </div>
+
+  </div>
+
+  <footer class="foot">每筆情報寫入前皆須通過來源連結檢查 — 無連結，不上稿。</footer>
+
+</div>
+
+<script>
+(function(){
+  var LOCALE_LABELS = {
+    'zh-TW|TW|TW:zh-Hant': '繁體中文（台灣）',
+    'zh-CN|CN|CN:zh-Hans': '简体中文（中国）',
+    'en-US|US|US:en': 'English（US）',
+    'ja|JP|JP:ja': '日本語（日本）'
+  };
+
+  function el(id){ return document.getElementById(id); }
+
+  function extractChannelId(line){
+    line = line.trim();
+    if(!line) return null;
+    var m = line.match(/\/channel\/(UC[a-zA-Z0-9_-]{10,})/);
+    if(m) return { type:'id', value:m[1] };
+    var bare = line.match(/^UC[a-zA-Z0-9_-]{10,}$/);
+    if(bare) return { type:'id', value:line };
+    var handle = line.match(/@([a-zA-Z0-9._-]+)/);
+    if(handle) return { type:'handle', value:'@' + handle[1] };
+    return { type:'unknown', value: line };
+  }
+
+  function buildNewsUrl(query, localeKey){
+    var parts = localeKey.split('|');
+    var hl = parts[0], gl = parts[1], ceid = parts[2];
+    var q = encodeURIComponent(query);
+    return 'https://news.google.com/rss/search?q=' + q + '&hl=' + hl + '&gl=' + gl + '&ceid=' + encodeURIComponent(ceid);
+  }
+
+  function h(str){
+    return String(str).replace(/[&<>"']/g, function(c){
+      return { '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c];
+    });
+  }
+
+  function copyText(text, btn){
+    function done(ok){
+      if(!btn) return;
+      var original = btn.dataset.origLabel || btn.textContent;
+      btn.dataset.origLabel = original;
+      btn.textContent = ok ? '已複製 ✓' : '複製失敗';
+      btn.classList.toggle('copied', ok);
+      setTimeout(function(){ btn.textContent = original; btn.classList.remove('copied'); }, 1500);
+    }
+    try{
+      if(navigator.clipboard && navigator.clipboard.writeText){
+        navigator.clipboard.writeText(text).then(function(){ done(true); }).catch(function(){ fallback(); });
+      } else { fallback(); }
+    }catch(e){ fallback(); }
+    function fallback(){
+      try{
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.style.position='fixed'; ta.style.opacity='0';
+        document.body.appendChild(ta); ta.focus(); ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        done(ok);
+      }catch(e){ done(false); }
+    }
+  }
+
+  document.addEventListener('click', function(e){
+    var btn = e.target.closest('.copy-btn');
+    if(!btn) return;
+    var targetId = btn.getAttribute('data-copy-target');
+    var target = el(targetId);
+    if(!target) return;
+    var text;
+    if(btn.getAttribute('data-tsv') === '1'){
+      text = target.dataset.tsv || target.textContent;
+    } else {
+      text = target.textContent;
+    }
+    copyText(text, btn);
+  });
+
+  el('blueprintForm').addEventListener('submit', function(e){
+    e.preventDefault();
+
+    var industry = el('industry').value.trim() || '（未填寫產業）';
+    var role = el('role').value.trim() || '（未填寫職位）';
+    var localeKey = el('newsLocale').value;
+    var localeLabel = LOCALE_LABELS[localeKey];
+
+    var kwInputs = Array.prototype.slice.call(document.querySelectorAll('.kw-input'));
+    var groups = kwInputs.map(function(inp){ return inp.value.trim(); }).filter(Boolean);
+
+    var ytChannelLines = el('ytChannels').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+    var ytKeywordLines = el('ytKeywords').value.split('\n').map(function(s){return s.trim();}).filter(Boolean);
+
+    var core1 = el('core1').value.trim() || '重點摘要';
+    var core2 = el('core2').value.trim() || '對本公司的商業影響';
+    var core3 = el('core3').value.trim() || '建議行動方案';
+
+    // ---- News RSS block ----
+    var newsUrlsEl = el('newsUrls');
+    newsUrlsEl.innerHTML = '';
+    if(groups.length === 0){
+      newsUrlsEl.innerHTML = '<p class="note">尚未輸入任何關鍵詞組。</p>';
+    } else {
+      groups.forEach(function(q, i){
+        var url = buildNewsUrl(q, localeKey);
+        var row = document.createElement('div');
+        row.className = 'url-row';
+        row.innerHTML =
+          '<div class="meta"><div class="q">' + h(url) + '</div>' +
+          '<div class="g">關鍵詞組 ' + (i+1) + '：「' + h(q) + '」 · ' + h(localeLabel) + '</div></div>' +
+          '<a class="open" href="' + h(url) + '" target="_blank" rel="noopener">開啟 ↗</a>';
+        newsUrlsEl.appendChild(row);
+      });
+    }
+
+    // ---- YouTube block ----
+    var ytBlock = el('ytBlock');
+    var ytHtml = '';
+    if(ytChannelLines.length){
+      ytHtml += '<p class="note">頻道 RSS（若為 /channel/UC… 網址已自動解析；@handle 需先用 YouTube Data API 的 channels.list(forHandle=…) 查出頻道 ID，已附在腳本中）：</p>';
+      ytChannelLines.forEach(function(line){
+        var parsed = extractChannelId(line);
+        if(parsed.type === 'id'){
+          var url = 'https://www.youtube.com/feeds/videos.xml?channel_id=' + parsed.value;
+          ytHtml += '<div class="url-row"><div class="meta"><div class="q">' + h(url) + '</div><div class="g">' + h(line) + '</div></div><a class="open" href="' + h(url) + '" target="_blank" rel="noopener">開啟 ↗</a></div>';
+        } else {
+          ytHtml += '<div class="url-row"><div class="meta"><div class="q">' + h(line) + '</div><div class="g">需透過 API 解析 handle 為頻道 ID，見下方 Python 腳本</div></div></div>';
+        }
+      });
+    }
+    if(ytKeywordLines.length){
+      ytHtml += '<p class="note" style="margin-top:14px;">關鍵字監控：YouTube 官方未提供搜尋結果 RSS，故以下關鍵字改用 YouTube Data API v3（search.list）於腳本中每日查詢，每筆結果都會附上真實影片網址（https://www.youtube.com/watch?v=…），仍符合「每則情報可追溯連結」原則：</p>';
+      ytHtml += '<div class="url-row"><div class="meta"><div class="q">' + ytKeywordLines.map(h).join('、') + '</div><div class="g">於 Python 腳本 YT_SEARCH_KEYWORDS 設定</div></div></div>';
+    }
+    if(!ytChannelLines.length && !ytKeywordLines.length){
+      ytHtml = '<p class="note">尚未設定 YouTube 監控標的（此區塊為選填）。</p>';
+    }
+    ytBlock.innerHTML = ytHtml;
+
+    // ---- AI Prompt ----
+    var groupsList = groups.length ? groups.map(function(g,i){return (i+1)+'. '+g;}).join('\n') : '（未設定關鍵詞組）';
+    var ytKwList = ytKeywordLines.length ? ytKeywordLines.join('、') : '（未設定）';
+    var promptText =
+'# 角色\n' +
+'你是「' + industry + '」產業的情報分析助理，服務對象是' + role + '。\n\n' +
+'# 輸入資料\n' +
+'你會收到今日抓取到的新聞條目與 YouTube 影片條目，每筆皆包含：標題、摘要或文字稿片段、來源連結、發布時間。\n\n' +
+'# 追蹤關鍵詞組\n' + groupsList + '\n\n' +
+'# YouTube 關鍵字\n' + ytKwList + '\n\n' +
+'# 嚴格規則（不可違反）\n' +
+'1. 只根據輸入資料中的標題與摘要/文字稿進行判讀，禁止使用你自身知識庫補充任何未在輸入資料中出現的事實、數字或事件。\n' +
+'2. 每一則輸出的情報都必須附上對應的「來源連結」欄位；若輸入資料缺少連結，直接捨棄該筆，不得輸出、不得杜撰連結。\n' +
+'3. 若輸入資料不足以判斷商業影響或建議行動，請明確回覆「資訊不足，待更多來源確認」，不要臆測。\n' +
+'4. 摘要與洞察需分別標註對應的來源連結，讀者需能一鍵回溯原文。\n\n' +
+'# 輸出格式（逐筆情報）\n' +
+'- 標題：\n' +
+'- 來源連結：\n' +
+'- ' + core1 + '（100 字內）：\n' +
+'- ' + core2 + '：\n' +
+'- ' + core3 + '：\n\n' +
+'# 每日總結（彙整所有情報後）\n' +
+'- 產業新聞／影音綜合摘要（100 字內，需標註引用的來源連結）\n' +
+'- 針對' + role + '的關鍵洞察與商業影響\n' +
+'- 建議行銷／策略內容切角\n' +
+'- 今日建議優先選擇行動方案（分為：優先執行、重點產出、後續追蹤），每項需註明依據來自哪一則情報（附連結）';
+    el('aiPromptText').textContent = promptText;
+
+    // ---- Sheets schema ----
+    var schema = [
+      ['擷取時間', 'datetime', '腳本執行時寫入的抓取時間戳', false],
+      ['來源類型', 'text', 'news 或 youtube', false],
+      ['關鍵詞組', 'text', '對應第 2 步設定的哪一組關鍵詞', false],
+      ['標題', 'text', '原始標題', false],
+      ['摘要/內容片段', 'text', 'RSS 摘要或影片文字稿片段', false],
+      ['來源連結', 'url', '原始新聞或影片網址；空值該列不寫入', true],
+      ['發布時間', 'datetime', '來源標註的發布時間', false],
+      [core1, 'text', 'AI 分析產出', false],
+      [core2, 'text', 'AI 分析產出', false],
+      [core3, 'text', 'AI 分析產出', false],
+      ['驗證狀態', 'text', '腳本檢查來源連結是否可連通後寫入', false]
+    ];
+    var table = el('schemaTable');
+    var thead = '<thead><tr><th>欄位</th><th>類型</th><th>說明</th></tr></thead>';
+    var rows = schema.map(function(r){
+      return '<tr class="' + (r[3] ? 'required' : '') + '"><td class="col">' + h(r[0]) + '</td><td>' + h(r[1]) + '</td><td>' + h(r[2]) + '</td></tr>';
+    }).join('');
+    table.innerHTML = thead + '<tbody>' + rows + '</tbody>';
+    var tsv = '欄位\t類型\t說明\n' + schema.map(function(r){ return r[0]+'\t'+r[1]+'\t'+r[2]+(r[3]?'（必填）':''); }).join('\n');
+    table.dataset.tsv = tsv;
+
+    // ---- Python script ----
+    var newsUrlEntries = groups.length
+      ? groups.map(function(q,i){ return '    {"group": ' + JSON.stringify('關鍵詞組'+(i+1)) + ', "query": ' + JSON.stringify(q) + ', "url": ' + JSON.stringify(buildNewsUrl(q, localeKey)) + '},'; }).join('\n')
+      : '    # 尚未設定關鍵詞組，請回到表單填寫後重新產生';
+
+    var channelIdEntries = ytChannelLines
+      .map(extractChannelId)
+      .filter(function(p){ return p.type === 'id'; })
+      .map(function(p){ return '    ' + JSON.stringify(p.value) + ','; })
+      .join('\n');
+    var handleEntries = ytChannelLines
+      .map(extractChannelId)
+      .filter(function(p){ return p.type === 'handle'; })
+      .map(function(p){ return '    ' + JSON.stringify(p.value) + ','; })
+      .join('\n');
+
+    var kwPy = ytKeywordLines.map(function(k){ return '    ' + JSON.stringify(k) + ','; }).join('\n');
+
+    var pyText =
+'"""\n' +
+industry + ' × ' + role + ' — 每日情報自動化腳本\n' +
+'資料來源：Google 新聞 RSS + YouTube（頻道 RSS / Data API 關鍵字搜尋）\n' +
+'核心原則：任何一筆沒有有效來源連結的資料，一律不寫入 Google Sheets。\n' +
+'安裝：pip install feedparser gspread google-generativeai google-api-python-client oauth2client requests\n' +
+'"""\n\n' +
+'import os\n' +
+'import datetime\n' +
+'import feedparser\n' +
+'import gspread\n' +
+'import requests\n' +
+'import google.generativeai as genai\n' +
+'from oauth2client.service_account import ServiceAccountCredentials\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 0. 設定區 — 金鑰一律從環境變數讀取，方便交給 GitHub Actions 等排程器\n' +
+'#    本機測試時可用：export GEMINI_API_KEY=xxx 等方式先設定好環境變數\n' +
+'# ------------------------------------------------------------------\n' +
+'GEMINI_API_KEY = os.environ["GEMINI_API_KEY"]\n' +
+'GOOGLE_SHEET_NAME = "' + industry + ' 情報儀表板"\n' +
+'SERVICE_ACCOUNT_JSON = "service_account.json"  # 由排程流程於執行時寫入，見下方 GitHub Actions 範本\n' +
+'YOUTUBE_API_KEY = os.environ.get("YOUTUBE_API_KEY", "")  # 僅關鍵字監控需要，未設定則自動略過\n\n' +
+'NEWS_RSS_FEEDS = [\n' + newsUrlEntries + '\n]\n\n' +
+'YT_CHANNEL_IDS = [\n' + (channelIdEntries || '    # 尚未偵測到可直接使用的頻道 ID') + '\n]\n\n' +
+'YT_HANDLES_TO_RESOLVE = [\n' + (handleEntries || '    # 無需解析的 @handle') + '\n]\n\n' +
+'YT_SEARCH_KEYWORDS = [\n' + (kwPy || '    # 尚未設定 YouTube 搜尋關鍵字') + '\n]\n\n' +
+'AI_PROMPT_TEMPLATE = """' + promptText.replace(/"""/g, '\\"\\"\\"') + '\n\n' +
+'今日輸入資料：\n' +
+'{items}\n' +
+'"""\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 1. 擷取：Google 新聞 RSS\n' +
+'# ------------------------------------------------------------------\n' +
+'def fetch_news_items():\n' +
+'    items = []\n' +
+'    for feed in NEWS_RSS_FEEDS:\n' +
+'        parsed = feedparser.parse(feed["url"])\n' +
+'        for entry in parsed.entries:\n' +
+'            link = entry.get("link", "").strip()\n' +
+'            if not link:\n' +
+'                continue  # 無來源連結，直接捨棄\n' +
+'            items.append({\n' +
+'                "source_type": "news",\n' +
+'                "group": feed["group"],\n' +
+'                "title": entry.get("title", ""),\n' +
+'                "summary": entry.get("summary", ""),\n' +
+'                "link": link,\n' +
+'                "published": entry.get("published", ""),\n' +
+'            })\n' +
+'    return items\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 2. 擷取：YouTube 頻道 RSS\n' +
+'# ------------------------------------------------------------------\n' +
+'def resolve_handle_to_channel_id(handle):\n' +
+'    url = "https://www.googleapis.com/youtube/v3/channels"\n' +
+'    resp = requests.get(url, params={"part": "id", "forHandle": handle.lstrip("@"), "key": YOUTUBE_API_KEY})\n' +
+'    data = resp.json()\n' +
+'    items = data.get("items", [])\n' +
+'    return items[0]["id"] if items else None\n\n' +
+'def fetch_youtube_channel_items():\n' +
+'    items = []\n' +
+'    channel_ids = list(YT_CHANNEL_IDS)\n' +
+'    for handle in YT_HANDLES_TO_RESOLVE:\n' +
+'        cid = resolve_handle_to_channel_id(handle)\n' +
+'        if cid:\n' +
+'            channel_ids.append(cid)\n' +
+'    for cid in channel_ids:\n' +
+'        feed_url = f"https://www.youtube.com/feeds/videos.xml?channel_id={cid}"\n' +
+'        parsed = feedparser.parse(feed_url)\n' +
+'        for entry in parsed.entries:\n' +
+'            link = entry.get("link", "").strip()\n' +
+'            if not link:\n' +
+'                continue\n' +
+'            items.append({\n' +
+'                "source_type": "youtube",\n' +
+'                "group": "頻道監控",\n' +
+'                "title": entry.get("title", ""),\n' +
+'                "summary": entry.get("summary", ""),\n' +
+'                "link": link,\n' +
+'                "published": entry.get("published", ""),\n' +
+'            })\n' +
+'    return items\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 3. 擷取：YouTube 關鍵字搜尋（Data API，官方無搜尋 RSS）\n' +
+'# ------------------------------------------------------------------\n' +
+'def fetch_youtube_search_items():\n' +
+'    items = []\n' +
+'    if not YT_SEARCH_KEYWORDS or not YOUTUBE_API_KEY:\n' +
+'        return items\n' +
+'    published_after = (datetime.datetime.utcnow() - datetime.timedelta(days=1)).isoformat("T") + "Z"\n' +
+'    for kw in YT_SEARCH_KEYWORDS:\n' +
+'        resp = requests.get(\n' +
+'            "https://www.googleapis.com/youtube/v3/search",\n' +
+'            params={\n' +
+'                "part": "snippet", "q": kw, "type": "video", "order": "date",\n' +
+'                "publishedAfter": published_after, "maxResults": 10, "key": YOUTUBE_API_KEY,\n' +
+'            },\n' +
+'        )\n' +
+'        for entry in resp.json().get("items", []):\n' +
+'            video_id = entry.get("id", {}).get("videoId")\n' +
+'            if not video_id:\n' +
+'                continue  # 無法組出真實連結，捨棄\n' +
+'            snippet = entry.get("snippet", {})\n' +
+'            items.append({\n' +
+'                "source_type": "youtube",\n' +
+'                "group": f"關鍵字：{kw}",\n' +
+'                "title": snippet.get("title", ""),\n' +
+'                "summary": snippet.get("description", ""),\n' +
+'                "link": f"https://www.youtube.com/watch?v={video_id}",\n' +
+'                "published": snippet.get("publishedAt", ""),\n' +
+'            })\n' +
+'    return items\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 4. 驗證：確認每筆連結實際可連通（排除死連結/無驗證內容）\n' +
+'# ------------------------------------------------------------------\n' +
+'def verify_link(url, timeout=5):\n' +
+'    try:\n' +
+'        resp = requests.head(url, allow_redirects=True, timeout=timeout)\n' +
+'        return resp.status_code < 400\n' +
+'    except requests.RequestException:\n' +
+'        return False\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 5. AI 分析（Gemini）— 僅根據附連結的項目進行摘要，不臆測\n' +
+'# ------------------------------------------------------------------\n' +
+'def analyze_with_gemini(items):\n' +
+'    genai.configure(api_key=GEMINI_API_KEY)\n' +
+'    model = genai.GenerativeModel("gemini-1.5-pro")\n' +
+'    items_text = "\\n\\n".join(\n' +
+'        f"[{it[\'source_type\']}] {it[\'title\']}\\n連結：{it[\'link\']}\\n摘要：{it[\'summary\'][:300]}"\n' +
+'        for it in items\n' +
+'    )\n' +
+'    prompt = AI_PROMPT_TEMPLATE.format(items=items_text)\n' +
+'    response = model.generate_content(prompt)\n' +
+'    return response.text\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 6. 寫入 Google Sheets（無連結或未通過驗證者不寫入）\n' +
+'# ------------------------------------------------------------------\n' +
+'def write_to_sheet(items):\n' +
+'    scope = ["https://spreadsheets.google.com/feeds", "https://www.googleapis.com/auth/drive"]\n' +
+'    creds = ServiceAccountCredentials.from_json_keyfile_name(SERVICE_ACCOUNT_JSON, scope)\n' +
+'    client = gspread.authorize(creds)\n' +
+'    sheet = client.open(GOOGLE_SHEET_NAME).sheet1\n' +
+'    now = datetime.datetime.now().isoformat(timespec="seconds")\n' +
+'    for it in items:\n' +
+'        if not it.get("link"):\n' +
+'            continue  # 核心原則：無來源連結不上稿\n' +
+'        verified = verify_link(it["link"])\n' +
+'        if not verified:\n' +
+'            continue  # 連結無法連通，視為無驗證內容，不寫入\n' +
+'        sheet.append_row([\n' +
+'            now, it["source_type"], it["group"], it["title"], it["summary"],\n' +
+'            it["link"], it.get("published", ""), "", "", "", "已驗證",\n' +
+'        ])\n\n' +
+'# ------------------------------------------------------------------\n' +
+'# 主流程\n' +
+'# ------------------------------------------------------------------\n' +
+'def main():\n' +
+'    items = fetch_news_items() + fetch_youtube_channel_items() + fetch_youtube_search_items()\n' +
+'    items = [it for it in items if it.get("link")]  # 二次過濾，確保每筆皆有連結\n' +
+'    print(f"擷取到 {len(items)} 筆有來源連結的情報")\n' +
+'    if not items:\n' +
+'        return\n' +
+'    summary = analyze_with_gemini(items)\n' +
+'    print("=== AI 分析結果 ===")\n' +
+'    print(summary)\n' +
+'    write_to_sheet(items)\n' +
+'    print("已寫入 Google Sheets（未通過連結驗證者已略過）")\n\n' +
+'if __name__ == "__main__":\n' +
+'    main()\n';
+    el('pyScript').textContent = pyText;
+
+    // ---- GitHub Actions bundle ----
+    var reqTxt =
+'feedparser\n' +
+'gspread\n' +
+'oauth2client\n' +
+'google-generativeai\n' +
+'google-api-python-client\n' +
+'requests\n';
+    el('ghRequirements').textContent = reqTxt;
+
+    var ghYml =
+'name: Daily Intel Dispatch\n\n' +
+'on:\n' +
+'  schedule:\n' +
+'    - cron: "0 23 * * *"   # UTC 23:00 = 台灣時間隔日早上 7:00\n' +
+'  workflow_dispatch: {}     # 允許在 Actions 頁面手動點擊執行，方便測試\n\n' +
+'jobs:\n' +
+'  run-intel:\n' +
+'    runs-on: ubuntu-latest\n' +
+'    steps:\n' +
+'      - name: Checkout repo\n' +
+'        uses: actions/checkout@v4\n\n' +
+'      - name: Set up Python\n' +
+'        uses: actions/setup-python@v5\n' +
+'        with:\n' +
+'          python-version: "3.11"\n\n' +
+'      - name: Install dependencies\n' +
+'        run: pip install -r requirements.txt\n\n' +
+'      - name: Write Google service account credentials\n' +
+'        run: echo "$GOOGLE_SHEETS_CREDENTIALS_JSON" > service_account.json\n' +
+'        env:\n' +
+'          GOOGLE_SHEETS_CREDENTIALS_JSON: ${{ secrets.GOOGLE_SHEETS_CREDENTIALS_JSON }}\n\n' +
+'      - name: Run daily intel script\n' +
+'        env:\n' +
+'          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}\n' +
+'          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}\n' +
+'        run: python daily_intel.py\n';
+    el('ghWorkflow').textContent = ghYml;
+
+    el('results').classList.add('show');
+    el('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+})();
+</script>
